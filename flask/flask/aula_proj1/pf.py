@@ -35,6 +35,44 @@ def login():
     else:
         print ("Deu ruim")
         return "RUIM"
+
+def calcula_media(p1,p2):
+    if (p1+p2)/2 >= 7: return render_template("aprovado.html")
+    elif (p1+p2)/2 < 3: return render_template("reprovado.html")
+    else: return render_template("final.html") 
+
+@pf.route("/media", methods =["POST"])
+def media():
+
+    if request.method == "POST":
+        p1 = int(request.form["p1"])
+        p2 = int(request.form["p2"])
+        return calcula_media(p1,p2) 
+
+    else:
+        print ("Deu ruim")
+        return "RUIM"
+
+def calcula_final(p1,p2,p3):
+
+    if (((p1+p2)/2)+p3)/2 >= 5: return render_template("aprovado.html")
+    else: return render_template("reprovado.html") 
+
+
+@pf.route("/final", methods =["POST"])
+def final():
+
+    if request.method == "POST":
+        p1 = int(request.form["p1"])
+        p2 = int(request.form["p2"])
+        p3 = int(request.form["p3"])
+        return calcula_final(p1,p2,p3) 
+
+    else:
+        print ("Deu ruim")
+        return "RUIM"
+        
+
     
 
 pf.run()
