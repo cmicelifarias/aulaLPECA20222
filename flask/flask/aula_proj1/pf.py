@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 
 pf = Flask(__name__)
 
+mediaf = 0
+
 def valida_senha(nome,senha):
 
     #abrindo arquivo
@@ -16,7 +18,7 @@ def valida_senha(nome,senha):
     if teste in linha:
         return render_template("calculapf.html")
     else:
-        return render_template("badlogin.html")
+        return render_template("index.html", erro="Login Incorreto")
     
     print(linha)
   
@@ -37,9 +39,15 @@ def login():
         return "RUIM"
 
 def calcula_media(p1,p2):
-    if (p1+p2)/2 >= 7: return render_template("aprovado.html")
-    elif (p1+p2)/2 < 3: return render_template("reprovado.html")
-    else: return render_template("final.html") 
+    if (p1+p2)/2 >= 7: 
+        mediaf = (p1+p2)/2
+        return render_template("aprovado.html", media=(p1+p2)/2)
+    elif (p1+p2)/2 < 3: 
+        mediaf = (p1+p2)/2
+        return render_template("reprovado.html", media=(p1+p2)/2)
+    else:
+        mediaf = (p1+p2)/2 
+        return render_template("final.html") 
 
 @pf.route("/media", methods =["POST"])
 def media():
@@ -53,20 +61,18 @@ def media():
         print ("Deu ruim")
         return "RUIM"
 
-def calcula_final(p1,p2,p3):
+def calcula_final(mediaf,p3):
 
-    if (((p1+p2)/2)+p3)/2 >= 5: return render_template("aprovado.html")
-    else: return render_template("reprovado.html") 
+    if (mediaf+p3)/2 >= 5: return render_template("aprovado.html",media=(mediaf+p3)/2)
+    else: return render_template("reprovado.html", media=(mediaf+p3)/2) 
 
 
 @pf.route("/final", methods =["POST"])
 def final():
 
     if request.method == "POST":
-        p1 = int(request.form["p1"])
-        p2 = int(request.form["p2"])
         p3 = int(request.form["p3"])
-        return calcula_final(p1,p2,p3) 
+        return calcula_final(mediaf,p3) 
 
     else:
         print ("Deu ruim")
