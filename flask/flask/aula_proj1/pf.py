@@ -1,21 +1,22 @@
 from flask import Flask, render_template, request
 
+import sqlite3
+
 pf = Flask(__name__)
 
 mediaf = 0
 
 def valida_senha(nome,senha):
 
-    #abrindo arquivo
-    arquivo = open("./senha.txt","r+")
-
-    #vendo se o candango já está no arquivo
+    conn = sqlite3.connect('pf.db') 
+    c = conn.cursor()
+    j = c.execute("SELECT * FROM alunos where nome = '"+nome+"' and dre ='"+senha+"'").fetchall()
+                         
+    conn.commit()
     
-    linha = arquivo.readlines()
-
-    teste = nome+"-"+senha+"\n"
-
-    if teste in linha:
+    print(j)
+    
+    if j:
         return render_template("calculapf.html")
     else:
         return render_template("index.html", erro="Login Incorreto")
